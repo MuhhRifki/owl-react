@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {Link, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
-import ReactDOM from 'react-dom'
 
 import {actorRequest} from '../../action/action'
 class Navbar extends Component {
@@ -22,7 +21,7 @@ class Navbar extends Component {
     }
     
     render() {
-        const {is_logged_in, modules_access} = this.props
+        const {is_logged_in} = this.props
 
         return (is_logged_in
             ? <div className="_c5m31 _c5x31 _ma3n3l _pd3n3r">

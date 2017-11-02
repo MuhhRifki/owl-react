@@ -17,11 +17,11 @@ class Init extends React.Component {
                 return res.json()
             }
         }).then((data) => {
+            console.log(data)
             data.data.is_logged_in
-                ? this.props.onInitialize(true,data.data.modules)
-                : this.props.onInitialize(false,'')
+                ? this.props.onInitialize(true)
+                : this.props.onInitialize(false)
         })
-        
     }
 
     render() {
@@ -46,7 +46,7 @@ const mapStatetoProps = (state) => {
 }
 const mapDispatchtoProps = (dispatch) => {
     return {
-        onInitialize: (is_logged_in, module_access) => dispatch(initAction(is_logged_in,module_access))
+        onInitialize: (is_logged_in) => dispatch(initAction(is_logged_in))
     }
 }
 export const Initialize = connect(mapStatetoProps, mapDispatchtoProps)(Init)

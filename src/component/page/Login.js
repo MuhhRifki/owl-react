@@ -18,6 +18,13 @@ class Login extends Component {
         }
     }
 
+    handleChange = (e) => {
+        const target = e.target
+        this.setState({
+            [target.id]: target.value
+        })
+    }
+
     render() {
         const {is_logged_in} = this.props
         return (!is_logged_in
@@ -32,9 +39,9 @@ class Login extends Component {
                     <form
                         className="_cn"
                         onSubmit={(e) => {
-                        e.preventDefault();
-                        this.handlerSignIn(this.props.dispatcherRequest)
-                    }}>
+                            e.preventDefault();
+                            this.handlerSignIn(this.props.dispatcherRequest)
+                        }}>
                         <div className="_ro">
                             <div className="_c5m38 _c5x312">
                                 <h2 className="_he">Login</h2>
@@ -42,31 +49,27 @@ class Login extends Component {
                                     <h2 className="_he">for gimBot</h2>
                                 </div>
                             </div>
-                        </div>
-                        <div className="_ro">
-                            <InputContent
-                                classWraper="_c5m36 _c5x312"
-                                id="email"
-                                type="text"
-                                name="email"
-                                placeholder="Email"
-                                value={this.state.email}
-                                onChangeState={this.onChangeState}/>
-                        </div>
-                        <div className="_ro">
-                            <div className="_c5m36 _c5m3o5 _c5x312">
-                                <div className="_cn5g">
-                                    <input
-                                        id="password"
-                                        type="password"
-                                        name="password"
-                                        placeholder="Password"
-                                        onChange={this.onChangeState}/>
-                                    <i onClick={this.onChangeDisplayPassword} className="fa fa-eye"></i>
-                                </div>
+                            <div className="_c5x312 _cn5g">
+                                <InputContent
+                                    classname=""
+                                    id="email"
+                                    type="text"
+                                    name="email"
+                                    placeholder="Email"
+                                    autocomplete="off"
+                                    value={this.state.email}
+                                    onChangeState={this.handleChange}/>
                             </div>
-                        </div>
-                        <div className="_ro">
+                            <div className="_c5x312 _cn5g">
+                                <InputContent
+                                    id="password"
+                                    type="password"
+                                    placeholder="Password"
+                                    autocomplete="off"
+                                    value={this.state.password}
+                                    onChangeState={this.handleChange}/>
+                                    <i onClick={this.onChangeDisplayPassword} className="fa fa-eye"></i>
+                            </div>
                             <div className="_c5m33 _c5x36">
                                 <p className="_me5t _ct3w">Forgot password?
                                     <b>
@@ -102,15 +105,9 @@ class Login extends Component {
                 : dispatcherRequest(false, 401, data.error))
         })
     }
-    onChangeState = (e) => {
-        const target = e.target
 
-        this.setState({
-            [target.name]: target.value
-        })
-    }
     onChangeDisplayPassword = () => {
-        let password = document.getElementB('password')
+        const password = document.getElementById('password')
 
         this.state.is_show_password
             ? ReactDOM
