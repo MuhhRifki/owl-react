@@ -1,26 +1,28 @@
-import React, {Component} from 'react'
+import React from 'react'
 
-class InputContent extends Component {
-    render() {
-        return (this.props.disabled === 'true'
-            ? <div className={this.props.classWraper}>
-                    <input
-                        type={this.props.type}
-                        name={this.props.name}
-                        placeholder={this.props.placeholder}
-                        onChange={this.props.onChangeState}
-                        value={this.props.value}
-                        disabled/>
-                </div>
-            : <div className={this.props.classWraper}>
-                <input
-                    type={this.props.type}
-                    name={this.props.name}
-                    placeholder={this.props.placeholder}
-                    onChange={this.props.onChangeState}
-                    value={this.props.value}/>
-            </div>)
-    }
+const InputContent = props => {
+    const {
+        id,
+        type,
+        placeholder,
+        classname,
+        value,
+        autocomplete,
+        onChangeState,
+        spellcheck,
+    } = props
+
+    return (
+        <input
+            id={id}
+            type={type}
+            placeholder={placeholder}
+            onChange={onChangeState}
+            value={value}
+            autoComplete={autocomplete}
+            spellCheck={spellcheck}
+            className={classname} />
+    )
 }
 
 export default InputContent

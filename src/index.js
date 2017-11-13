@@ -7,7 +7,6 @@ import registerServiceWorker from './registerServiceWorker'
 import {Initialize, store} from './config/index'
 import {routes} from './config/routes.js'
 
-
 ReactDOM.render(
     <Provider store={store}>
         <Initialize>
