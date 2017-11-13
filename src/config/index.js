@@ -17,7 +17,6 @@ class Init extends React.Component {
                 return res.json()
             }
         }).then((data) => {
-            console.log(data)
             data.data.is_logged_in
                 ? this.props.onInitialize(true)
                 : this.props.onInitialize(false)
@@ -27,7 +26,7 @@ class Init extends React.Component {
     render() {
         const {is_loading} = this.props
         return (is_loading
-            ? <div>jksa</div>
+            ? <div>Loading</div>
             : this.props.children)
     }
 }

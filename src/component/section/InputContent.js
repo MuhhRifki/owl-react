@@ -9,23 +9,19 @@ const InputContent = props => {
         value,
         autocomplete,
         onChangeState,
+        spellcheck,
     } = props
 
-    const style = {
-        outline: 'none'
-    } 
-
     return (
-        <div className={classname}>
-            <input
-                id={id}
-                style={style}
-                type={type}
-                placeholder={placeholder}
-                onChange={onChangeState}
-                value={value}
-                autoComplete={autocomplete}/>
-        </div>
+        <input
+            id={id}
+            type={type}
+            placeholder={placeholder}
+            onChange={onChangeState}
+            value={value}
+            autoComplete={autocomplete}
+            spellCheck={spellcheck}
+            className={classname} />
     )
 }
 
