@@ -1,4 +1,5 @@
 import React from 'react'
+import {API_ROOT} from '../../../../config/api'
 
 const Information = props => {
     const {
@@ -26,7 +27,7 @@ const Information = props => {
                                     <p className="_ct3x">{val.description}</p>
                                 </div>
                                 <div className="_ma3m3l width-200px">
-                                    <img className="_i3pr5l" alt={val.title} src="http://meikoapp.herokuapp.com/api/v1/files/error/not-found.png" />
+                                    <img className="_i3pr5l" alt={val.title} src={`${API_ROOT}/${val.image}`} />
                                 </div>
                             </div>
                         )

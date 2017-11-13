@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {Link, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
-import ContentEditable from "react-contenteditable"
+import ContentEditable from 'react-contenteditable'
 
+import {API_ROOT} from '../../config/api'
 import {actorRequest} from '../../action/action'
 import ChatUser from './chat/ChatUser'
 import ChatBot from './chat/ChatBot'
@@ -27,7 +28,7 @@ class Home extends Component {
     }
 
     loadUser = () => {
-        fetch('https://meikoapp.herokuapp.com/api/v1/user/profile', {
+        fetch(`${API_ROOT}/api/v1/user/profile`, {
             method: "GET",
             credentials: 'include',
             crossDomain: true
@@ -41,7 +42,7 @@ class Home extends Component {
     }
 
     loadHistory = (id) => {
-        let url = 'https://meikoapp.herokuapp.com/api/v1/bot'
+        let url = `${API_ROOT}/api/v1/bot`
         if (typeof(id) === 'number') {
             url = url + '?id=' + id
         }
@@ -54,7 +55,7 @@ class Home extends Component {
         .then(response => response.json())
         .then((json) => {
             json.code === 200
-                ? json.data.map((val) => this.dispatchMessage(val))
+                ? json.data.map((val) => this.dispatchMessage(val)) && this.scrollBottom()
                 : console.log('err')
         })
     }
@@ -76,6 +77,7 @@ class Home extends Component {
 
         let formData = new FormData()
         formData.append('text', this.state.message_input)
+
         this.dispatchMessage({
             message: {
                 id: 1,
@@ -86,8 +88,9 @@ class Home extends Component {
         })
 
         this.setState({message_input: ''})
+        this.scrollBottom(true)
 
-        fetch('https://meikoapp.herokuapp.com/api/v1/bot', {
+        fetch(`${API_ROOT}/api/v1/bot`, {
             method: 'POST',
             credentials: 'include',
             crossDomain: true,
@@ -95,9 +98,10 @@ class Home extends Component {
         })
         .then(response => response.json())
         .then((json) => {
-            json.code === 200
-                ? this.dispatchMessage(json.data)
-                : console.log('error posting')
+            if (json.code === 200) {
+                this.dispatchMessage(json.data)
+                this.scrollBottom(true)
+            }
         })
     }
 
@@ -105,7 +109,7 @@ class Home extends Component {
         e.preventDefault()
 
         const {dispatcherRequest} =  this.props
-        fetch('https://meikoapp.herokuapp.com/api/v1/user/signout', {
+        fetch(`${API_ROOT}/api/v1/user/signout`, {
             method: 'POST',
             credentials: 'include',
             crossDomain: true
@@ -116,6 +120,21 @@ class Home extends Component {
                 ? dispatcherRequest(false, 0, '')
                 : dispatcherRequest(true, 401, 'Error')
         })
+    }
+
+    scrollBottom = (isSmooth) => {
+        setTimeout(() => {
+            const content = document.getElementById('chat_content')
+            if (isSmooth) {
+                content.scroll({
+                    top: content.scrollHeight,
+                     behavior: 'smooth'
+                 }) 
+            } else {
+                content.scrollTop = content.scrollHeight
+            }
+            
+        }, 100)
     }
     
     render() {
@@ -160,7 +179,7 @@ class Home extends Component {
                         </div>
                     </header>
                     {/* content */}
-                    <div className="_cn _cn3cl _ch3cnt">
+                    <div id="chat_content" className="_cn _cn3cl _ch3cnt">
                         <div className="_ch3pn _emt"></div>
                         <div className="_ch3pn">
                             {/* chatting container */}
@@ -194,7 +213,6 @@ class Home extends Component {
                                 onChange={this.handleMessageInput}
                                 onKeyDown={(e)=>{
                                     if (e.key === 'Enter') {
-                                        console.log(e.key)
                                         return this.handleSubmit(e)
                                     }
                                 }}/>

@@ -1,4 +1,5 @@
 import React from 'react'
+import {API_ROOT} from '../../../../config/api'
 
 const Assistant = props => {
     const {
@@ -20,7 +21,7 @@ const Assistant = props => {
                     assistants.map((val, i) => {
                         return (
                             <div key={i} className="_ch3c _fx5mx">
-                                <img className="_i3pr5l" alt={val.name} src="http://meikoapp.herokuapp.com/api/v1/files/error/not-found.png" />
+                                <img className="_i3pr5l" alt={val.name} src={`${API_ROOT}/${val.image}`} />
                                 <div className="_bio">
                                     <span>Nama: {val.name}</span>
                                     <span>Telepon: {val.phone}</span>

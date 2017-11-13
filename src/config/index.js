@@ -4,11 +4,12 @@ import PropTypes from 'prop-types'
 import {createStore} from 'redux'
 import {initAction} from '../action/action'
 import Reducers from '../reducer/index'
+import {API_ROOT} from './api'
 
 class Init extends React.Component {
 
     componentWillMount() {
-        fetch("https://meikoapp.herokuapp.com/api/v1/role", {
+        fetch(`${API_ROOT}/api/v1/role`, {
             method: "GET",
             credentials: "include",
             crossDomain: true

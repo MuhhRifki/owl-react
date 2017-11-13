@@ -36,7 +36,7 @@ const ChatBot = props => {
                 user_name={user_name}
                 assistants={entity} 
                 time={time}/> :
-                intent === INTENT_INFORMATION ?
+        intent === INTENT_INFORMATION ?
             <Information
                 user_name={user_name}
                 informations={entity}

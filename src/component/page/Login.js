@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 
 import {actorRequest} from '../../action/action'
 import {InputContent} from '../index.js'
+import {API_ROOT} from '../../config/api'
 
 class Login extends Component {
     constructor() {
@@ -88,7 +89,7 @@ class Login extends Component {
         let formData = new FormData()
         formData.append('email', this.state.email)
         formData.append('password', this.state.password)
-        fetch('https://meikoapp.herokuapp.com/api/v1/user/signin', {
+        fetch(`${API_ROOT}/api/v1/user/signin`, {
             method: 'POST',
             credentials: 'include',
             crossDomain: true,
