@@ -4,11 +4,12 @@ import PropTypes from 'prop-types'
 import {createStore} from 'redux'
 import {initAction} from '../action/action'
 import Reducers from '../reducer/index'
+import {API_ROOT} from './api'
 
 class Init extends React.Component {
 
     componentWillMount() {
-        fetch("https://meikoapp.herokuapp.com/api/v1/role", {
+        fetch(`${API_ROOT}/api/v1/role`, {
             method: "GET",
             credentials: "include",
             crossDomain: true
@@ -18,16 +19,15 @@ class Init extends React.Component {
             }
         }).then((data) => {
             data.data.is_logged_in
-                ? this.props.onInitialize(true,data.data.modules)
-                : this.props.onInitialize(false,'')
+                ? this.props.onInitialize(true)
+                : this.props.onInitialize(false)
         })
-        
     }
 
     render() {
         const {is_loading} = this.props
         return (is_loading
-            ? <div>jksa</div>
+            ? <div>Loading</div>
             : this.props.children)
     }
 }
@@ -46,7 +46,7 @@ const mapStatetoProps = (state) => {
 }
 const mapDispatchtoProps = (dispatch) => {
     return {
-        onInitialize: (is_logged_in, module_access) => dispatch(initAction(is_logged_in,module_access))
+        onInitialize: (is_logged_in) => dispatch(initAction(is_logged_in))
     }
 }
 export const Initialize = connect(mapStatetoProps, mapDispatchtoProps)(Init)

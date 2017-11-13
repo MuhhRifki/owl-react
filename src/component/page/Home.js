@@ -1,150 +1,243 @@
 import React, {Component} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
+import ContentEditable from 'react-contenteditable'
 
-import {Navbar} from '../index.js'
-//import {InputContent} from '../index.js'
+import {API_ROOT} from '../../config/api'
+import {actorRequest} from '../../action/action'
+import ChatUser from './chat/ChatUser'
+import ChatBot from './chat/ChatBot'
 
-class Message extends Component {
-    render() {
-        return (
-            <div>
-                {(this.props.content.user === 0)
-                    ? <div className="_c5m312 _c5x312 _ma3l3t">
-                            <div className="_c5m312 _c5x312">
-                                <h2 className="_he3sb">gimBot</h2>
-                                <div className="_ch3a _c5m38">
-                                    <p className="_he3s">{this.props.content.messageResponses}</p>
-                                </div>
-                            </div>
-                            <p className="_he3s _c5m312">{new Date().toDateString()}</p>
-                        </div>
-                    : <div className="_c5m312 _c5x312 _ma3l3t">
-                        <div className="_c5m312 _c5x312">
-                            <h2 className="_he3sb5r">(Your Name)</h2>
-                            <div className="_ch3b _c5m38 _pl5r">
-                                <p className="_he3s5r">{this.props.content.message}</p>
-                            </div>
-                        </div>
-                        <p className="_he3s5r _c5m312 _pl5r">{new Date().toDateString()}</p>
-                    </div>}
-            </div>
-        )
-    }
-}
+const STATUS_USER = 0
+const STATUS_BOT = 1
 
 class Home extends Component {
+
     constructor() {
-        super();
+        super()
         this.state = {
-            conversation: [],
-            message: ""
+            user_name: "",
+            message_input: "",
+            message_histories: []
         }
-        this.handleSubmit = this
-            .handleSubmit
-            .bind(this)
-        this.handleChange = this
-            .handleChange
-            .bind(this)
     }
 
-    handleChange(e) {
-        this.setState({conversation: this.state.conversation, message: e.target.value})
+    componentDidMount() {
+        this.loadUser()
+        this.loadHistory()
     }
 
-    handleSubmit(e) {
-
-        e.stopPropagation()
-        e.preventDefault()
-        const conversation = this.state.conversation
-        const message = this.state.message
-        conversation.push({message: this.state.message, user: 1})
-        this.setState({conversation: conversation, message: ""})
-        let form = new FormData()
-        form.append('chat', message)
-        fetch('', {
-            method: "POST",
-            body: form
-        }).then((data) => {
-            conversation.push({message: data.chat, user: 0})
-            this.setState({conversation: conversation, message: ""})
+    loadUser = () => {
+        fetch(`${API_ROOT}/api/v1/user/profile`, {
+            method: "GET",
+            credentials: 'include',
+            crossDomain: true
+        })
+        .then(response => response.json())
+        .then((json) => {
+            json.code === 200
+                ? this.setState({user_name: json.data.name})
+                : console.log('err')
         })
     }
 
+    loadHistory = (id) => {
+        let url = `${API_ROOT}/api/v1/bot`
+        if (typeof(id) === 'number') {
+            url = url + '?id=' + id
+        }
+
+        fetch(url, {
+            method: "GET",
+            credentials: 'include',
+            crossDomain: true
+        })
+        .then(response => response.json())
+        .then((json) => {
+            json.code === 200
+                ? json.data.map((val) => this.dispatchMessage(val)) && this.scrollBottom()
+                : console.log('err')
+        })
+    }
+
+    dispatchMessage = (data) => {
+        const {message, status, time} = data
+        const message_histories = this.state.message_histories
+        if (status !== STATUS_USER && status !== STATUS_BOT) {return}
+        message_histories.push({message: message, status: status, time: new Date(time).toLocaleString()})
+        this.setState({message_histories: message_histories})
+    }
+
+    handleMessageInput = (e) => {
+        this.setState({message_input: e.target.value})
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault()
+
+        let formData = new FormData()
+        formData.append('text', this.state.message_input)
+
+        this.dispatchMessage({
+            message: {
+                id: 1,
+                text: this.state.message_input,
+            },
+            status: STATUS_USER,
+            time: new Date().toLocaleString()
+        })
+
+        this.setState({message_input: ''})
+        this.scrollBottom(true)
+
+        fetch(`${API_ROOT}/api/v1/bot`, {
+            method: 'POST',
+            credentials: 'include',
+            crossDomain: true,
+            body: formData
+        })
+        .then(response => response.json())
+        .then((json) => {
+            if (json.code === 200) {
+                this.dispatchMessage(json.data)
+                this.scrollBottom(true)
+            }
+        })
+    }
+
+    handleSignOut = (e) => {
+        e.preventDefault()
+
+        const {dispatcherRequest} =  this.props
+        fetch(`${API_ROOT}/api/v1/user/signout`, {
+            method: 'POST',
+            credentials: 'include',
+            crossDomain: true
+        })
+        .then(response => response.json())
+        .then((data) => {
+            data.code === 200
+                ? dispatcherRequest(false, 0, '')
+                : dispatcherRequest(true, 401, 'Error')
+        })
+    }
+
+    scrollBottom = (isSmooth) => {
+        setTimeout(() => {
+            const content = document.getElementById('chat_content')
+            if (isSmooth) {
+                content.scroll({
+                    top: content.scrollHeight,
+                     behavior: 'smooth'
+                 }) 
+            } else {
+                content.scrollTop = content.scrollHeight
+            }
+            
+        }, 100)
+    }
+    
     render() {
-        return (
-            <body className="_fx">
-                <div className="_c5m312 _pd3n3lr">
-                    <div className="_f5b _c5m312 _c5tm32 _c5tx32">
-                        <Navbar/>
-                        <div className="_c5m35 _c5x311 _ma3n3r _pd3n3lr">
-                            <img className="_i3l _i3ci _pl5l" src="../img/img.jpg" alt="logo"/>
-                            <p className="_he3m">gimBot</p>
-                            <p className="_ct3w">Ask me anything about your problem</p>
-                        </div>
-                    </div>
-                    <div className="_cb _c5m312 _c5tm37 _c5tx37">
-                        <div className="_c5m312 _c5x312">
-                            <div className="_c5m312 _c5x312 _ma3l3t">
-                                <div className="_c5m312 _c5x312">
-                                    <h2 className="_he3sb">gimBot</h2>
-                                    <div className="_ch3a _c5m38">
-                                        <p className="_he3s">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                            minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                            commodo consequat.</p>
+        const {is_logged_in} = this.props
+        const content = (
+            <div className="_cn">
+                <div className="_cn _cn3cl">
+                    <header className="_cn center _pd3xl3a _f5c _ch3hdr _he5a">
+                        <div className="_cn5n">
+                            <i className="fa fa-bars _ic3l5w" aria-hidden="true"></i>
+                            {/* sidebar */}
+                            <div className="_n _pd _fx5n">
+                                <div className="_cn _cn3cl">
+                                    {/* sidebar header */}
+                                    <div className="_pd3xl3tb _pd3l3lr _f5c _fx5n">
+                                        <img className="_i3xlc _i3ci _ma3m3b" src="../img/img.jpg" alt="logo" />
+                                        <div className="ta5c">
+                                            <h3 className="_he3m _ma">gimBot</h3>
+                                            <p className="_ct3w _ma">Ask me anything about practicum</p>
+                                        </div>
+                                    </div>
+                                    {/* sidebar content */}
+                                    <div className="_cn _cn3cl _ch3cnt"></div>
+                                    {/* sidebar footer */}
+                                    <div className="_pd3l3a _ch3ftr">
+                                        <Link to={'#'} onClick={this.handleSignOut}>
+                                            <div className="_sd5ft">
+                                                LOGOUT
+                                            </div>
+                                        </Link>
                                     </div>
                                 </div>
-                                <p className="_he3s _c5m312">10:12 AM, Today</p>
                             </div>
-                            <div className="_c5m312 _c5x312 _ma3l3t">
-                                <div className="_c5m312 _c5x312">
-                                    <h2 className="_he3sb5r">(Your Name)</h2>
-                                    <div className="_ch3b _c5m38 _pl5r">
-                                        <p className="_he3s5r">Duis aute irure dolor in reprehenderit in voluptate velit
-                                            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                                            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
-                                    </div>
-                                </div>
-                                <p className="_he3s5r _c5m312 _pl5r">10:15 AM, Today</p>
-                            </div>
-                            <div className="_c5m312 _c5x312 _ma3l3t">
-                                <div className="_c5m312 _c5x312">
-                                    <h2 className="_he3sb">gimBot</h2>
-                                    <div className="_ch3a _c5m38">
-                                        <p className="_he3s">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                            minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                            commodo consequat.</p>
-                                    </div>
-                                </div>
-                                <p className="_he3s _c5m312">10:12 AM, Today</p>
-                            </div>
-
-                            {(this.state.conversation !== undefined)
-                                ? this.state.conversation.map((content, id) => {
-                                    return <Message key={id} content={content}/>
-                                })
-                                : ""}
+                        </div>
+                        {/* <div className="overlay"></div> */}
+                        <span className="_ma3l3lr">
+                            <img className="_i3l _i3ci _ma" src="../img/img.jpg" alt="logo" />
+                        </span>
+                        <div>
+                            <p className="_he3m _ma">gimBot</p>
+                            <p className="_ct3w">Ask me anything about practicum</p>
+                        </div>
+                    </header>
+                    {/* content */}
+                    <div id="chat_content" className="_cn _cn3cl _ch3cnt">
+                        <div className="_ch3pn _emt"></div>
+                        <div className="_ch3pn">
+                            {/* chatting container */}
+                            {this.state.message_histories.map((val, i) => {
+                                return val.status === STATUS_USER
+                                    ? (
+                                        <ChatUser
+                                            key={i}
+                                            username={this.state.user_name}
+                                            message={val.message.text} 
+                                            time={val.time}/>)
+                                    : (
+                                        <ChatBot
+                                            key={i}
+                                            user_name="gimBot"
+                                            message={val.message} 
+                                            time={val.time}/>
+                                    )
+                            })}
                         </div>
                     </div>
-
-                    <div className="_cm312 _pd3n3t _ma3n3t _pd3n3lr">
-                        <div class="_c5m312 _c5x312 _ch3ms">
-                            <form id="send-message" onSubmit={this.handleSubmit}>
-                                <input
-                                    className="_txa3m"
-                                    onChange={this.handleChange}
-                                    type="text"
-                                    name="text"
-                                    autoComplete="off"
-                                    value={this.state.message}/>
-                            </form>
+                    {/* footer */}
+                    <footer className="_ch3ftr">
+                        <div className="_cn flex-end _ch3bd">
+                            <ContentEditable
+                                id="message_input"
+                                className="_ch3m"
+                                html={this.state.message_input}
+                                tabIndex="0"
+                                aria-expanded="false"
+                                onChange={this.handleMessageInput}
+                                onKeyDown={(e)=>{
+                                    if (e.key === 'Enter') {
+                                        return this.handleSubmit(e)
+                                    }
+                                }}/>
+                            <span id="__ch3sb" className="_ma3m3l" onClick={this.handleSubmit}>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="#bbbbbb" fillOpacity=".9" d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z">
+                                    </path>
+                                </svg>
+                            </span>
                         </div>
-                    </div>
+                    </footer>
                 </div>
-            </body>
-        );
+            </div>
+        )
+        return (is_logged_in
+            ? content
+            : <Redirect to={'/login'}/>)
     }
 }
-
-export default Home;
+const mapStatetoProps = (state) => {
+    return {is_logged_in: state.is_logged_in, modules_access: state.modules_access}
+}
+const mapDispatchtoProps = (dispatch) => {
+    return {
+        dispatcherRequest: (is_logged_in, request_status, error_message) => dispatch(actorRequest(is_logged_in, request_status, error_message))
+    }
+}
+export default connect(mapStatetoProps, mapDispatchtoProps)(Home)

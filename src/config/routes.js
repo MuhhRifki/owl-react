@@ -1,6 +1,6 @@
 import{
     Login,
-    Main
+    Home
 } from '../component/index.js'
 
 export const routes = [
@@ -9,8 +9,8 @@ export const routes = [
         component: Login,
         exact: false
     },{
-        path:'/main',
-        component: Main,
+        path:'/home',
+        component: Home,
         exact: false
     }
 ]
