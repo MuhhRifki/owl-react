@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import {createStore} from 'redux'
 import {initAction} from '../action/action'
 import Reducers from '../reducer/index'
+import {Animation} from '../component/index.js'
+
 import {API_ROOT} from './api'
 
 class Init extends React.Component {
@@ -27,7 +29,7 @@ class Init extends React.Component {
     render() {
         const {is_loading} = this.props
         return (is_loading
-            ? <div>Loading</div>
+            ? <Animation />
             : this.props.children)
     }
 }

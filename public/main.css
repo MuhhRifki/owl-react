@@ -2186,6 +2186,15 @@ hr {
     padding-right: 5px;
 }
 
+._ic3l5l{
+    text-align: center;
+    width: 50px;
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    margin-left: -25px;
+}
+
 ._fx {
     position: fixed;
     max-height: 100%;

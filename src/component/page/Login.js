@@ -53,7 +53,7 @@ class Login extends Component {
                                     autocomplete="off"
                                     spellCheck="false"
                                     onChangeState={this.handleChange}
-                                    value={this.state.email} />
+                                    value={this.state.email}/>
                             </div>
                             <div className="_c5m312 _c5x312">
                                 <div className="_cn5g _ma3l3b">
@@ -65,15 +65,21 @@ class Login extends Component {
                                         autocomplete="off"
                                         spellCheck="false"
                                         onChangeState={this.handleChange}
-                                        value={this.state.password} />
+                                        value={this.state.password}/>
                                     <i className="fa fa-eye" onClick={this.handleDisplayPassword}></i>
                                 </div>
                             </div>
                             <div className="_c5m312 _c5x312">
                                 <p className="_ct3w inline">
-                                    Forgot password? <b><Link to={'/'} className="_ct3w" href="">here</Link></b>
+                                    Forgot password?
+                                    <b>
+                                        <Link to={'/'} className="_ct3w" href="">here</Link>
+                                    </b>
                                 </p>
                                 <button className="_bt5m3w _pl5r _ma _mx3s" type="submit">Login</button>
+                            </div>
+                            <div className="_c5m312 _c5x312">
+                                <img className="_ic3l5l" src="../img/logo.png" alt="logo"/>
                             </div>
                         </div>
                     </form>
