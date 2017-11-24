@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Unknown = props => {
+const EntityEmpty = props => {
     const {
         user_name,
         time
@@ -11,7 +11,7 @@ const Unknown = props => {
             <div className="_c5m312 _c5x312">
                 <h2 className="_he3sb">{user_name}</h2>
                 <div className="_ch3a">
-                    <p className="_he3s">Maaf kami tidak dapat mengenali permintaan Anda</p>
+                    <p className="_ma">Maaf. Data tidak yang tersedia</p>
                 </div>
             </div>
             <p className="_he3s _c5m312">{time}</p>
@@ -19,4 +19,4 @@ const Unknown = props => {
     )
 }
 
-export default Unknown
+export default EntityEmpty

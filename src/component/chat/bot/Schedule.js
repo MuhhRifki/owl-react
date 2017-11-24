@@ -12,15 +12,15 @@ const Schedule = props => {
             <div className="_c5m312 _c5x312">
                 <h2 className="_he3sb">{user_name}</h2>
                 <div className="_ch3a">
-                    <p className="_he3s">Here it is!</p>
+                    <p className="_ma">Ini dia!</p>
                 </div>
             </div>
             <div className="_ch5w _cn _ma3l3b">
                 {
-                    schedules.map(val => {
+                    schedules.map((val, i) => {
                         return (
-                            <div className="_ch3f">
-                                <h4>{val.name}</h4>
+                            <div key={i} className="_ch3f">
+                                <h4>{val.course_name}</h4>
                                 <h3>{val.time}</h3>
                                 <h6>{val.day}</h6>
                                 <h5>{val.place}</h5>

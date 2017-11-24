@@ -4,15 +4,14 @@ import PropTypes from 'prop-types'
 import {createStore} from 'redux'
 import {initAction} from '../action/action'
 import Reducers from '../reducer/index'
-import {API_ROOT} from './api'
+import {Loading} from '../component/index'
 
 class Init extends React.Component {
 
     componentWillMount() {
-        fetch(`${API_ROOT}/api/v1/role`, {
+        fetch(`/api/v1/role`, {
             method: "GET",
-            credentials: "include",
-            crossDomain: true
+            credentials: "include"
         }).then(res => {
             if (res.ok) {
                 return res.json()
@@ -27,7 +26,7 @@ class Init extends React.Component {
     render() {
         const {is_loading} = this.props
         return (is_loading
-            ? <div>Loading</div>
+            ? <Loading />
             : this.props.children)
     }
 }

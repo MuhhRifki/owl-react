@@ -6,10 +6,13 @@ import {Switch, Route, BrowserRouter as Router} from 'react-router-dom'
 import registerServiceWorker from './registerServiceWorker'
 import {Initialize, store} from './config/index'
 import {routes} from './config/routes.js'
+import {LoadingBar, ErrorMessage} from './component/section/index'
 
 ReactDOM.render(
     <Provider store={store}>
         <Initialize>
+            <LoadingBar />
+            <ErrorMessage />
             <Router>
                 <Switch>
                     {routes.map((route, i) => <Route
@@ -22,4 +25,5 @@ ReactDOM.render(
         </Initialize>
     </Provider>
 , document.getElementById('root'));
+
 registerServiceWorker();

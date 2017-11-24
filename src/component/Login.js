@@ -4,9 +4,8 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import ReactDOM from 'react-dom'
 
-import {actorRequest} from '../../action/action'
-import {InputContent} from '../index.js'
-import {API_ROOT} from '../../config/api'
+import {actorRequest, loadingRequest} from '../action/action'
+import {InputContent} from './section/index'
 
 class Login extends Component {
     constructor() {
@@ -71,7 +70,10 @@ class Login extends Component {
                             </div>
                             <div className="_c5m312 _c5x312">
                                 <p className="_ct3w inline">
-                                    Forgot password? <b><Link to={'/'} className="_ct3w" href="">here</Link></b>
+                                    {'Forgot password? '}
+                                    <b>
+                                        <Link to={'/'} className="_ct3w" href="">here</Link>
+                                    </b>
                                 </p>
                                 <button className="_bt5m3w _pl5r _ma _mx3s" type="submit">Login</button>
                             </div>
@@ -84,22 +86,44 @@ class Login extends Component {
 
     handleSignIn = (e) => {
         e.preventDefault()
-        const {dispatcherRequest} = this.props
+        const {dispatcherRequest, dispatcherLoading} = this.props
+        const {email, password} = this.state
+        dispatcherLoading(10, false)
+
+        if (email.length < 10 || password.length < 6) {
+            dispatcherLoading(0, true)
+            dispatcherRequest(false, 401, 'Invalid email or password')
+            return
+        }
 
         let formData = new FormData()
         formData.append('email', this.state.email)
         formData.append('password', this.state.password)
-        fetch(`${API_ROOT}/api/v1/user/signin`, {
+        fetch(`/api/v1/user/signin`, {
             method: 'POST',
             credentials: 'include',
-            crossDomain: true,
             body: formData
         }).then((res) => {
-            return res.json()
-        }).then((data) => {
-            return (data.code === 200
-                ? dispatcherRequest(true, 200, '')
-                : dispatcherRequest(false, 401, data.error))
+            if (res.status >= 500) {
+                dispatcherLoading(10, true)
+                dispatcherRequest(false, 401, 'Error connection')
+                return
+            }
+            return res
+                .json()
+                .then((data) => {
+                    if (data.code === 200) {
+                        dispatcherLoading(100, false)
+                        dispatcherRequest(true, 200, '')
+                    } else {
+                        dispatcherLoading(10, true)
+                        dispatcherRequest(false, 401, data.error[0])
+                    }
+                })
+        }).catch(() => {
+            dispatcherLoading(10, true)
+            dispatcherRequest(false, 401, 'Error connection')
+            return
         })
     }
 
@@ -124,7 +148,8 @@ const mapStatetoProps = (state) => {
 }
 const mapDispatchtoProps = (dispatch) => {
     return {
-        dispatcherRequest: (is_logged_in, request_status, error_message) => dispatch(actorRequest(is_logged_in, request_status, error_message))
+        dispatcherRequest: (is_logged_in, request_status, error_message) => dispatch(actorRequest(is_logged_in, request_status, error_message)),
+        dispatcherLoading: (progress, error) => dispatch(loadingRequest(progress, error))
     }
 }
 export default connect(mapStatetoProps, mapDispatchtoProps)(Login)
