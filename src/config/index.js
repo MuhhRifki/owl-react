@@ -5,21 +5,19 @@ import {createStore} from 'redux'
 import {initAction} from '../action/action'
 import Reducers from '../reducer/index'
 import {Loading} from '../component/index'
+import axios from 'axios'
 
 class Init extends React.Component {
 
     componentWillMount() {
-        fetch(`/api/v1/role`, {
-            method: "GET",
-            credentials: "include"
-        }).then(res => {
-            if (res.ok) {
-                return res.json()
+        axios.get(`/api/v1/role`).then((res)=>{
+            if (res.status === 200) {
+                if (res.data.data.is_logged_in) {
+                    this.props.onInitialize(true)
+                    return
+                }
             }
-        }).then((data) => {
-            data.data.is_logged_in
-                ? this.props.onInitialize(true)
-                : this.props.onInitialize(false)
+            this.props.onInitialize(false)
         })
     }
 

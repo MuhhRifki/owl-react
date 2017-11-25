@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Link, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import ContentEditable from 'react-contenteditable'
+import axios from 'axios'
 
 import {actorRequest, loadingRequest} from '../action/action'
 import ChatUser from './chat/ChatUser'
@@ -30,17 +31,14 @@ class Home extends Component {
 
     loadUser = () => {
         const {dispatcherRequest} = this.props
-        fetch(`/api/v1/user/profile`, {
-            method: "GET",
-            credentials: 'include'
-        }).then(res => {
-            if (res.ok) {
-                return res.json()
+        axios.get(`/api/v1/user/profile`, {
+            validateStatus: (status) => {
+                return status === 200
             }
-        }).then((json) => {
-            json.code === 200
-                ? this.setState({user_name: json.data.name})
-                : dispatcherRequest(true, 401, 'Error')
+        }).then((res) => {
+            this.setState({user_name: res.data.data.name})
+        }).catch((err) => {
+            dispatcherRequest(true, 401, 'Failed to get user name')
         })
     }
 
@@ -52,20 +50,17 @@ class Home extends Component {
             url = url + '?id=' + id
         }
 
-        fetch(url, {
-                method: "GET",
-                credentials: 'include'
-            })
-            .then(response => response.json())
-            .then((json) => {
-                if (json.code === 200) {
-                    this.setState({is_histories_loaded: true})
-                    json.data.map((val) => this.dispatchMessage(val))
-                    this.scrollBottom()
-                    return
-                }
-                dispatcherRequest(true, 401, 'Error')
-            })
+        axios.get(url, {
+            validateStatus: (status) => {
+                return status === 200
+            }
+        }).then((res) => {
+            res.data.data.map((val) => this.dispatchMessage(val))
+            this.setState({is_histories_loaded: true})
+            this.scrollBottom()
+        }).catch((err) => {
+            dispatcherRequest(true, 401, 'Failed to get message history')
+        })
     }
 
     dispatchMessage = (data) => {
@@ -115,18 +110,15 @@ class Home extends Component {
         this.setState({message_input: ''})
         this.scrollBottom(true)
 
-        fetch(`/api/v1/bot`, {
-                method: 'POST',
-                credentials: 'include',
-                body: formData
-            })
-            .then(response => response.json())
-            .then((json) => {
-                if (json.code === 200) {
-                    this.dispatchMessage(json.data)
-                    this.scrollBottom(true)
-                }
-            })
+        axios.post(`/api/v1/bot`, formData, {
+            validateStatus: (status) => {
+                return status === 200
+            }
+        })
+        .then((res)=>{
+            this.dispatchMessage(res.data.data)
+            this.scrollBottom(true)
+        }).catch(()=>{})
     }
 
     handleSignOut = (e) => {
@@ -135,21 +127,17 @@ class Home extends Component {
         const {dispatcherRequest, dispatcherLoading} = this.props
         dispatcherLoading(10, false)
 
-        fetch(`/api/v1/user/signout`, {
-            method: 'POST',
-            credentials: 'include'
-        }).then(res => {
-            if (res.ok) {
-                return res.json()
+        axios.post(`/api/v1/user/signout`, {
+            validateStatus: (status) => {
+                return status === 200
             }
-        }).then((data) => {
-            if (data.code === 200) {
-                dispatcherLoading(100, false)
-                dispatcherRequest(false, 0, '')
-            } else {
-                dispatcherLoading(10, true)
-                dispatcherRequest(true, 401, 'Error')
-            }
+        })
+        .then((res)=>{
+            dispatcherLoading(100, false)
+            dispatcherRequest(false, 0, '')
+        }).catch((err)=>{
+            dispatcherLoading(10, true)
+            dispatcherRequest(true, 401, 'Error connection')
         })
     }
 
@@ -157,6 +145,9 @@ class Home extends Component {
         setTimeout(() => {
             const content = document.getElementById('chat_content')
             if (content) {
+                if (typeof(content.scroll) !== 'function') {
+                    return
+                }
                 if (isSmooth) {
                     content.scroll({top: content.scrollHeight, behavior: 'smooth'})
                 } else {

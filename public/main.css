@@ -819,8 +819,8 @@ hr {
 }
 
 ._cn {
-    display: flex;
     display: -webkit-flex;
+    display: flex;
     height: 100%;
     width: 100%;
 }
@@ -2846,8 +2846,8 @@ div._ch5w:first-child {
 }
 
 ._ch3pn._emt {
-    display: flex;
     display: -webkit-flex;
+    display: flex;
     flex: 1 1 auto;
 }
 

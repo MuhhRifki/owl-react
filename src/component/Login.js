@@ -1,8 +1,12 @@
+import 'core-js/es6/map'
+import 'core-js/es6/set'
+
 import React, {Component} from 'react'
 import {Link, Redirect} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import ReactDOM from 'react-dom'
+import axios from 'axios'
 
 import {actorRequest, loadingRequest} from '../action/action'
 import {InputContent} from './section/index'
@@ -99,31 +103,23 @@ class Login extends Component {
         let formData = new FormData()
         formData.append('email', this.state.email)
         formData.append('password', this.state.password)
-        fetch(`/api/v1/user/signin`, {
-            method: 'POST',
-            credentials: 'include',
-            body: formData
-        }).then((res) => {
-            if (res.status >= 500) {
-                dispatcherLoading(10, true)
-                dispatcherRequest(false, 401, 'Error connection')
-                return
+
+        axios.post(`/api/v1/user/signin`, formData, {
+            validateStatus: (status) => {
+                return status < 500
             }
-            return res
-                .json()
-                .then((data) => {
-                    if (data.code === 200) {
-                        dispatcherLoading(100, false)
-                        dispatcherRequest(true, 200, '')
-                    } else {
-                        dispatcherLoading(10, true)
-                        dispatcherRequest(false, 401, data.error[0])
-                    }
-                })
-        }).catch(() => {
+        })
+        .then((res)=>{
+            if (res.status === 200) {
+                dispatcherLoading(100, false)
+                dispatcherRequest(true, 200, '')
+            } else {
+                dispatcherLoading(10, true)
+                dispatcherRequest(false, 401, res.data.error[0])
+            }
+        }).catch((err)=>{
             dispatcherLoading(10, true)
             dispatcherRequest(false, 401, 'Error connection')
-            return
         })
     }
 
