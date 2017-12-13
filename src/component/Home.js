@@ -25,8 +25,10 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        this.loadUser()
-        this.loadHistory()
+        if (this.props.is_logged_in) {
+            this.loadUser()
+            this.loadHistory()   
+        }
     }
 
     loadUser = () => {
@@ -38,7 +40,7 @@ class Home extends Component {
         }).then((res) => {
             this.setState({user_name: res.data.data.name})
         }).catch((err) => {
-            dispatcherRequest(true, 401, 'Failed to get user name')
+            dispatcherRequest(true, 401, 'Gagal menampilkan nama pengguna')
         })
     }
 
@@ -59,7 +61,7 @@ class Home extends Component {
             this.setState({is_histories_loaded: true})
             this.scrollBottom()
         }).catch((err) => {
-            dispatcherRequest(true, 401, 'Failed to get message history')
+            dispatcherRequest(true, 401, 'Gagal menampilkan riwayat pesan')
         })
     }
 
@@ -86,7 +88,7 @@ class Home extends Component {
 
         if (!this.state.is_histories_loaded) {
             const {dispatcherRequest, is_logged_in} = this.props
-            dispatcherRequest(is_logged_in, 401, 'Message has not been loaded')
+            dispatcherRequest(is_logged_in, 401, 'Sedang memuat riwayat pesan')
             return
         }
 
@@ -137,7 +139,7 @@ class Home extends Component {
             dispatcherRequest(false, 0, '')
         }).catch((err)=>{
             dispatcherLoading(10, true)
-            dispatcherRequest(true, 401, 'Error connection')
+            dispatcherRequest(true, 401, 'Kesalahan sambungan')
         })
     }
 
@@ -173,7 +175,7 @@ class Home extends Component {
                                         <img className="_i3xlc _ma3m3b" src="../img/logo512.png" alt="logo"/>
                                         <div className="ta5c">
                                             <h3 className="_he3m _ma">gimBot</h3>
-                                            <p className="_ct3w _ma">Ask me anything about practicum</p>
+                                            <p className="_ct3w _ma">Tanyakan apapun mengenai praktikum</p>
                                         </div>
                                     </div>
                                     {/* sidebar content */}
@@ -182,7 +184,7 @@ class Home extends Component {
                                     <div className="_pd3l3a _ch3ftr">
                                         <Link to={'#'} onClick={this.handleSignOut}>
                                             <div className="_sd5ft">
-                                                LOGOUT
+                                                KELUAR
                                             </div>
                                         </Link>
                                     </div>
@@ -195,7 +197,7 @@ class Home extends Component {
                         </span>
                         <div>
                             <p className="_he3m _ma">gimBot</p>
-                            <p className="_ct3w">Ask me anything about practicum</p>
+                            <p className="_ct3w">Tanyakan apapun mengenai praktikum</p>
                         </div>
                     </header>
                     {/* content */}
@@ -267,7 +269,7 @@ class Home extends Component {
         )
         return (is_logged_in
             ? content
-            : <Redirect to={'/login'}/>)
+            : <Redirect to={'/bot/login'}/>)
     }
 }
 const mapStatetoProps = (state) => {

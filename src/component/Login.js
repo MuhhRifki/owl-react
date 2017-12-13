@@ -2,10 +2,9 @@ import 'core-js/es6/map'
 import 'core-js/es6/set'
 
 import React, {Component} from 'react'
-import {Link, Redirect} from 'react-router-dom'
+import {Redirect} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import ReactDOM from 'react-dom'
 import axios from 'axios'
 
 import {actorRequest, loadingRequest} from '../action/action'
@@ -17,7 +16,8 @@ class Login extends Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            password_is_show: false
         }
     }
 
@@ -32,7 +32,7 @@ class Login extends Component {
         const {is_logged_in} = this.props
         return (!is_logged_in
             ? this.renderMain()
-            : <Redirect to={`/home`}/>)
+            : <Redirect to={`/bot/chat`}/>)
     }
 
     renderMain = () => {
@@ -42,9 +42,9 @@ class Login extends Component {
                     <form onSubmit={this.handleSignIn}>
                         <div className="_ro">
                             <div className="_c5m38 _c5x312">
-                                <h2 className="_he">Login</h2>
+                                <h2 className="_he">Masuk</h2>
                                 <div className="_ln5w">
-                                    <h2 className="_he">for gimBots</h2>
+                                    <h2 className="_he">ke gimBot</h2>
                                 </div>
                             </div>
                             <div className="_c5m312 _c5x312">
@@ -62,8 +62,10 @@ class Login extends Component {
                                 <div className="_cn5g _ma3l3b">
                                     <InputContent
                                         id="password"
-                                        type="password"
-                                        placeholder="Password"
+                                        type={
+                                            this.state.password_is_show ? 'text' : 'password'
+                                        }
+                                        placeholder="Kata sandi"
                                         classname="_ct3w"
                                         autocomplete="off"
                                         spellCheck="false"
@@ -74,12 +76,12 @@ class Login extends Component {
                             </div>
                             <div className="_c5m312 _c5x312">
                                 <p className="_ct3w inline">
-                                    {'Forgot password? '}
+                                    {'Lupa sandi? '}
                                     <b>
-                                        <Link to={'/'} className="_ct3w" href="">here</Link>
+                                        <a href="/forgot" className="_ct3w">klik di sini</a>
                                     </b>
                                 </p>
-                                <button className="_bt5m3w _pl5r _ma _mx3s" type="submit">Login</button>
+                                <button className="_bt5m3w _pl5r _ma _mx3s" type="submit">Masuk</button>
                             </div>
                         </div>
                     </form>
@@ -96,7 +98,7 @@ class Login extends Component {
 
         if (email.length < 10 || password.length < 6) {
             dispatcherLoading(0, true)
-            dispatcherRequest(false, 401, 'Invalid email or password')
+            dispatcherRequest(false, 401, 'Email atau kata sandi salah')
             return
         }
 
@@ -115,19 +117,16 @@ class Login extends Component {
                 dispatcherRequest(true, 200, '')
             } else {
                 dispatcherLoading(10, true)
-                dispatcherRequest(false, 401, res.data.error[0])
+                dispatcherRequest(false, 401, 'Email atau kata sandi salah')
             }
         }).catch((err)=>{
             dispatcherLoading(10, true)
-            dispatcherRequest(false, 401, 'Error connection')
+            dispatcherRequest(false, 401, 'Kesalahan sambungan')
         })
     }
 
     handleDisplayPassword = (e) => {
-        const dom = ReactDOM.findDOMNode(document.getElementById('password'))
-        dom.getAttribute('type') === 'password'
-            ? dom.setAttribute('type', 'text')
-            : dom.setAttribute('type', 'password')
+        this.setState({password_is_show: !this.state.password_is_show})
     }
 }
 
