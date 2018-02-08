@@ -4,32 +4,27 @@ import PropTypes from 'prop-types'
 import {createStore} from 'redux'
 import {initAction} from '../action/action'
 import Reducers from '../reducer/index'
-import {Animation} from '../component/index.js'
-
-import {API_ROOT} from './api'
+import {Loading} from '../component/index'
+import axios from 'axios'
 
 class Init extends React.Component {
 
     componentWillMount() {
-        fetch(`${API_ROOT}/api/v1/role`, {
-            method: "GET",
-            credentials: "include",
-            crossDomain: true
-        }).then(res => {
-            if (res.ok) {
-                return res.json()
+        axios.get(`/api/v1/role`).then((res)=>{
+            if (res.status === 200) {
+                if (res.data.data.is_logged_in) {
+                    this.props.onInitialize(true)
+                    return
+                }
             }
-        }).then((data) => {
-            data.data.is_logged_in
-                ? this.props.onInitialize(true)
-                : this.props.onInitialize(false)
+            this.props.onInitialize(false)
         })
     }
 
     render() {
         const {is_loading} = this.props
         return (is_loading
-            ? <Animation />
+            ? <Loading />
             : this.props.children)
     }
 }

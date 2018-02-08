@@ -1,12 +1,14 @@
+import 'core-js/es6/map'
+import 'core-js/es6/set'
+
 import React, {Component} from 'react'
-import {Link, Redirect} from 'react-router-dom'
+import {Redirect} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import ReactDOM from 'react-dom'
+import axios from 'axios'
 
-import {actorRequest} from '../../action/action'
-import {InputContent} from '../index.js'
-import {API_ROOT} from '../../config/api'
+import {actorRequest, loadingRequest} from '../action/action'
+import {InputContent} from './section/index'
 
 class Login extends Component {
     constructor() {
@@ -14,7 +16,8 @@ class Login extends Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            password_is_show: false
         }
     }
 
@@ -29,7 +32,7 @@ class Login extends Component {
         const {is_logged_in} = this.props
         return (!is_logged_in
             ? this.renderMain()
-            : <Redirect to={`/home`}/>)
+            : <Redirect to={`/bot/chat`}/>)
     }
 
     renderMain = () => {
@@ -39,9 +42,9 @@ class Login extends Component {
                     <form onSubmit={this.handleSignIn}>
                         <div className="_ro">
                             <div className="_c5m38 _c5x312">
-                                <h2 className="_he">Login</h2>
+                                <h2 className="_he">Masuk</h2>
                                 <div className="_ln5w">
-                                    <h2 className="_he">for gimBots</h2>
+                                    <h2 className="_he">ke gimBot</h2>
                                 </div>
                             </div>
                             <div className="_c5m312 _c5x312">
@@ -59,8 +62,10 @@ class Login extends Component {
                                 <div className="_cn5g _ma3l3b">
                                     <InputContent
                                         id="password"
-                                        type="password"
-                                        placeholder="Password"
+                                        type={
+                                            this.state.password_is_show ? 'text' : 'password'
+                                        }
+                                        placeholder="Kata sandi"
                                         classname="_ct3w"
                                         autocomplete="off"
                                         spellCheck="false"
@@ -71,12 +76,12 @@ class Login extends Component {
                             </div>
                             <div className="_c5m312 _c5x312">
                                 <p className="_ct3w inline">
-                                    Forgot password?
+                                    {'Lupa sandi? '}
                                     <b>
-                                        <Link to={'/'} className="_ct3w" href="">here</Link>
+                                        <a href="/forgot" className="_ct3w">klik di sini</a>
                                     </b>
                                 </p>
-                                <button className="_bt5m3w _pl5r _ma _mx3s" type="submit">Login</button>
+                                <button className="_bt5m3w _pl5r _ma _mx3s" type="submit">Masuk</button>
                             </div>
                             <div className="_c5m312 _c5x312">
                                 <img className="_ic3l5l" src="../img/logo.png" alt="logo"/>
@@ -90,30 +95,41 @@ class Login extends Component {
 
     handleSignIn = (e) => {
         e.preventDefault()
-        const {dispatcherRequest} = this.props
+        const {dispatcherRequest, dispatcherLoading} = this.props
+        const {email, password} = this.state
+        dispatcherLoading(10, false)
+
+        if (email.length < 10 || password.length < 6) {
+            dispatcherLoading(0, true)
+            dispatcherRequest(false, 401, 'Email atau kata sandi salah')
+            return
+        }
 
         let formData = new FormData()
         formData.append('email', this.state.email)
         formData.append('password', this.state.password)
-        fetch(`${API_ROOT}/api/v1/user/signin`, {
-            method: 'POST',
-            credentials: 'include',
-            crossDomain: true,
-            body: formData
-        }).then((res) => {
-            return res.json()
-        }).then((data) => {
-            return (data.code === 200
-                ? dispatcherRequest(true, 200, '')
-                : dispatcherRequest(false, 401, data.error))
+
+        axios.post(`/api/v1/user/signin`, formData, {
+            validateStatus: (status) => {
+                return status < 500
+            }
+        })
+        .then((res)=>{
+            if (res.status === 200) {
+                dispatcherLoading(100, false)
+                dispatcherRequest(true, 200, '')
+            } else {
+                dispatcherLoading(10, true)
+                dispatcherRequest(false, 401, 'Email atau kata sandi salah')
+            }
+        }).catch((err)=>{
+            dispatcherLoading(10, true)
+            dispatcherRequest(false, 401, 'Kesalahan sambungan')
         })
     }
 
     handleDisplayPassword = (e) => {
-        const dom = ReactDOM.findDOMNode(document.getElementById('password'))
-        dom.getAttribute('type') === 'password'
-            ? dom.setAttribute('type', 'text')
-            : dom.setAttribute('type', 'password')
+        this.setState({password_is_show: !this.state.password_is_show})
     }
 }
 
@@ -130,7 +146,8 @@ const mapStatetoProps = (state) => {
 }
 const mapDispatchtoProps = (dispatch) => {
     return {
-        dispatcherRequest: (is_logged_in, request_status, error_message) => dispatch(actorRequest(is_logged_in, request_status, error_message))
+        dispatcherRequest: (is_logged_in, request_status, error_message) => dispatch(actorRequest(is_logged_in, request_status, error_message)),
+        dispatcherLoading: (progress, error) => dispatch(loadingRequest(progress, error))
     }
 }
 export default connect(mapStatetoProps, mapDispatchtoProps)(Login)

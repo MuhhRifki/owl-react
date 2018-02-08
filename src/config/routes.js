@@ -5,11 +5,11 @@ import{
 
 export const routes = [
     {
-        path: '/login',
+        path: '/bot/login',
         component: Login,
         exact: false
     },{
-        path:'/home',
+        path:'/bot/chat',
         component: Home,
         exact: false
     }

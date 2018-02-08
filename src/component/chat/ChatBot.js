@@ -19,7 +19,6 @@ const ChatBot = props => {
     const {
         user_name,
         message: {
-            // id,
             entity,
             intent
         },
@@ -49,7 +48,7 @@ const ChatBot = props => {
         intent === INTENT_ASSIGNMENT ?
             <Assignment
                 user_name={user_name}
-                attendances={entity}
+                assignments={entity}
                 time={time}/> :
         intent === INTENT_GRADE ?
             <Grade

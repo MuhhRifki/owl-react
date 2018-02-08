@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 const Assignment = props => {
     const {
@@ -11,21 +12,22 @@ const Assignment = props => {
         <div className="_c5m312 _c5x312 _ma3l3t _ma3m3b">
             <h2 className="_he3sb">{user_name}</h2>
             <div className="_ch3a">
-                <p className="_he3s">Here it is!</p>
+                <p className="_ma">Ini dia!</p>
             </div>
             {
-                assignments.map(val => {
+                assignments.map((val, i) => {
+                    const dt = new Date(val.due_date * 1000).toDateString()
                     return (
-                        <div className="_ch3g _c5m33 _c5x312">
+                        <div key={i} className="_ch3g _c5m33 _c5x312">
                             <h4>{val.course_name}</h4>
-                            <h6>{val.due_date}</h6>
+                            <h6>{dt}</h6>
                             <h5>{val.description}</h5>
-                            <h3>View More</h3>
+                            <Link to={'/assignment/' + val.id}><h3>Lihat detail</h3></Link>
                         </div>
                     )
                 })
             }
-            <p className="_he3s _c5m312">{time}</p>
+            <p className="_he3s _pd _c5x312">{time}</p>
         </div>
     )
 }
