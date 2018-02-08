@@ -1,5 +1,4 @@
 import React from 'react'
-import {API_ROOT} from '../../../../config/api'
 
 const Information = props => {
     const {
@@ -12,7 +11,7 @@ const Information = props => {
         <div className="_c5m312 _c5x312 _ma3l3t">
             <h2 className="_he3sb">{user_name}</h2>
             <div className="_ch3a">
-                <p className="_he3s">Ini dia!</p>
+                <p className="_ma">Ini dia!</p>
             </div>
             <div className="_ch3d _c5m36">
                 <header>
@@ -22,12 +21,12 @@ const Information = props => {
                     informations.map((val, i) => {
                         return (
                             <div key={i} className="_c5m312 _c5x312 _cn _pd3m3a">
-                                <div className="_pd">
+                                <div className="_pd _fx5mn">
                                     <p className="_ct3m">{val.title}</p>
                                     <p className="_ct3x">{val.description}</p>
                                 </div>
-                                <div className="_ma3m3l width-200px">
-                                    <img className="_i3pr5l" alt={val.title} src={`${API_ROOT}/${val.image}`} />
+                                <div className="_ma3m3l width-100px _fx5mx">
+                                    <img className="_i3pr5l" alt={val.title} src={val.image} />
                                 </div>
                             </div>
                         )
