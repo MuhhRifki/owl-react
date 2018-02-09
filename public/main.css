@@ -1856,7 +1856,9 @@ input[type="checkbox"] {
 
 ._ch3a5b {
   margin-right: 5px;
-  white-space: nowrap; }
+  border-radius: 50px;
+  white-space: nowrap;
+  box-shadow: 1px 1px 4px 1px rgba(42, 43, 43, 0.075); }
 
 ._ch3b {
   margin-left: 50px;
@@ -1952,30 +1954,32 @@ div._ch5w {
   flex: 0 0 auto;
   max-width: 150px;
   border-radius: 10px;
-  background-color: #b9b9b9;
+  background-color: #e6e6e6;
   list-style-type: none;
   text-align: left; }
   ._ch3f h3 {
     margin-top: 10px;
-    margin-bottom: 0;
+    margin-bottom: 0px;
     font-size: 1.2em;
     color: #3e9dcf; }
   ._ch3f h4 {
     margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 1em;
-    color: #ffffff; }
+    margin-bottom: 5px;
+    font-size: 1.4em;
+    color: #000000;
+    font-weight: bold; }
   ._ch3f h5 {
+    padding-top: 0px;
     margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 0.8em;
-    color: #ffffff; }
+    margin-bottom: 5px;
+    font-size: 1em;
+    color: #000000; }
   ._ch3f h6 {
     margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 0.8em;
-    color: #ffffff;
-    font-weight: 300; }
+    margin-bottom: 5px;
+    font-size: 1em;
+    color: #000000;
+    font-weight: bold; }
   @media (min-width: 992px) {
     ._ch3f h3 {
       font-size: 2em; }
@@ -1985,42 +1989,41 @@ div._ch5w {
       font-size: 1.1em; } }
 
 ._ch3g {
-  padding: 0;
-  margin: 10px 10px 0px 0px;
+  border: #e6e6e6 solid 1px;
+  padding: 0px;
+  margin-bottom: 15px;
   border-radius: 10px;
-  background-color: #b9b9b9;
+  background-color: white;
   list-style-type: none;
   text-align: left;
   overflow: hidden; }
   ._ch3g h3 {
-    padding: 5px 0px 0px 0px;
+    padding: 10px 15px 15px 0px;
     margin-bottom: 0px;
-    height: 30px;
+    height: 45px;
+    color: #FFFFFF;
     background-color: #3e9dcf;
-    color: #ffffff;
     text-align: center;
     font-size: 1em;
-    font-weight: normal; }
+    font-weight: bold; }
   ._ch3g h4 {
-    padding: 0px 10px 0px 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    color: #ffffff;
-    font-size: 1.1em;
-    font-weight: 500; }
+    padding: 10px 15px 5px 15px;
+    margin: 5px 15px 5px 15px;
+    margin-bottom: 5px;
+    color: #000000;
+    font-size: 1.2em;
+    font-weight: bold; }
   ._ch3g h5 {
-    padding: 0px 10px 0px 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    color: #ffffff;
-    font-size: 1em;
+    padding: 0px 15px 5px 15px;
+    margin: 5px 15px 5px 15px;
+    color: #000000;
+    font-size: .8em;
     font-weight: normal; }
   ._ch3g h6 {
-    padding: 0px 10px 0px 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    color: #ffffff;
-    font-size: 0.8em;
+    padding: 0px 15px 5px 15px;
+    margin: 5px 15px 5px 15px;
+    color: #000000;
+    font-size: .8em;
     font-weight: normal; }
 
 ._ch3bd {

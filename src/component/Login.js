@@ -83,9 +83,9 @@ class Login extends Component {
                                 </p>
                                 <button className="_bt5m3w _pl5r _ma _mx3s" type="submit">Masuk</button>
                             </div>
-                            <div className="_c5m312 _c5x312">
+                            {/* <div className="_c5m312 _c5x312">
                                 <img className="_ic3l5l" src="../img/logo.png" alt="logo"/>
-                            </div>
+                            </div> */}
                         </div>
                     </form>
                 </div>

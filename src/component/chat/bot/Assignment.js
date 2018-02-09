@@ -21,7 +21,7 @@ const Assignment = props => {
                     return (
                         <div key={i} className="_ch3g _c5m33 _c5x312" style={{clear:"left"}}>
                             <h4>{val.course_name}</h4>
-                            <h6>{dt}</h6>
+                            <h6>Due Date: {dt}</h6>
                             <h5>{val.description}</h5>
                             <Link to={'/assignment/' + val.id}><h3>Lihat detail</h3></Link>
                         </div>

@@ -21,9 +21,9 @@ const Schedule = props => {
                     schedules.map((val, i) => {
                         return (
                             <div key={i} className="_ch3f">
-                                <h4>{val.course_name}</h4>
+                                <h4>{val.day}</h4>
                                 <h3>{val.time}</h3>
-                                <h6>{val.day}</h6>
+                                <h6>{val.course_name}</h6>
                                 <h5>{val.place}</h5>
                             </div>
                         )
