@@ -20,6 +20,7 @@ const ChatBot = props => {
         user_name,
         message: {
             entity,
+            message,
             intent
         },
         time
@@ -29,34 +30,41 @@ const ChatBot = props => {
         intent !== INTENT_UNKNOWN && entity.length < 1 ?
             <EntityEmpty
                 user_name={user_name}
+                message={message}
                 time={time}/> :
         intent === INTENT_ASSISTANT ?
             <Assistant
                 user_name={user_name}
-                assistants={entity} 
+                assistants={entity}
+                message={message}
                 time={time}/> :
         intent === INTENT_INFORMATION ?
             <Information
                 user_name={user_name}
                 informations={entity}
+                message={message}
                 time={time}/> :
         intent === INTENT_SCHEDULE ?
             <Schedule
                 user_name={user_name}
                 schedules={entity}
+                message={message}
                 time={time}/> :
         intent === INTENT_ASSIGNMENT ?
             <Assignment
                 user_name={user_name}
                 assignments={entity}
+                message={message}
                 time={time}/> :
         intent === INTENT_GRADE ?
             <Grade
                 user_name={user_name}
                 grades={entity}
+                message={message}
                 time={time}/> :
             <Unknown
                 user_name={user_name}
+                message={message}
                 time={time}/>
     )
 }

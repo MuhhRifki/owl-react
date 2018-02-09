@@ -174,7 +174,7 @@ class Home extends Component {
                                     <div className="_pd3xl3tb _pd3l3lr _f5c _fx5n">
                                         <img className="_i3xlc _ma3m3b" src="../img/logo512.png" alt="logo"/>
                                         <div className="ta5c">
-                                            <h3 className="_he3m _ma">gimBot</h3>
+                                            <h3 className="_he3m _ma">Owl Assistant</h3>
                                             <p className="_ct3w _ma">Tanyakan apapun mengenai praktikum</p>
                                         </div>
                                     </div>
@@ -196,7 +196,7 @@ class Home extends Component {
                             <img className="_i3l _ma" src="../img/logo256.png" alt="logo"/>
                         </span>
                         <div>
-                            <p className="_he3m _ma">gimBot</p>
+                            <p className="_he3m _ma">Owl Assistant</p>
                             <p className="_ct3w">Tanyakan apapun mengenai praktikum</p>
                         </div>
                     </header>
@@ -229,8 +229,24 @@ class Home extends Component {
                                                     username={this.state.user_name}
                                                     message={val.message.text}
                                                     time={val.time}/>)
-                                                : (<ChatBot key={i} user_name="gimBot" message={val.message} time={val.time}/>)
+                                                : (<ChatBot key={i} user_name="Owl Assistant" message={val.message} time={val.time}/>)
                                         })}
+                                        <div className="_w100 _pd _ma">
+                                            <div className="_c5m312 _c5x312">
+                                                <h2 className="_he3sb">Owl Assistant</h2>
+                                                <div className="_ch3a">
+                                                    <p className="_ma">What can i help?</p>
+                                                </div>
+                                            </div>
+                                            <div className="_ch5w _cn">
+                                                <button className="_ch3a5b">Praktikum hari ini</button>
+                                                <button className="_ch3a5b">Lihat nilai</button>
+                                                <button className="_ch3a5b">Lihat tugas</button>
+                                                <button className="_ch3a5b">Tugas yang belum dikerjakan</button>
+                                                <button className="_ch3a5b">Praktikum besok</button>
+                                            </div>
+                                            <p className="_he3s _c5m312">10:15 AM, Today</p>
+                                        </div>
                                 </div>
                             </div>
                         )}

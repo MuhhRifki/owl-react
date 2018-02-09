@@ -5,6 +5,7 @@ const Assignment = props => {
     const {
         user_name,
         assignments,
+        message,
         time
     } = props
 
@@ -12,7 +13,7 @@ const Assignment = props => {
         <div className="_c5m312 _c5x312 _ma3l3t _ma3m3b">
             <h2 className="_he3sb">{user_name}</h2>
             <div className="_ch3a">
-                <p className="_ma">Ini dia!</p>
+                <p className="_ma">{message}</p>
             </div>
             {
                 assignments.map((val, i) => {

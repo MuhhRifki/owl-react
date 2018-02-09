@@ -4,6 +4,7 @@ const Information = props => {
     const {
         user_name,
         informations,
+        message,
         time
     } = props
 
@@ -11,7 +12,7 @@ const Information = props => {
         <div className="_c5m312 _c5x312 _ma3l3t">
             <h2 className="_he3sb">{user_name}</h2>
             <div className="_ch3a">
-                <p className="_ma">Ini dia!</p>
+                <p className="_ma">{message}</p>
             </div>
             <div className="_ch3d _c5m36">
                 <header>
@@ -24,9 +25,6 @@ const Information = props => {
                                 <div className="_pd _fx5mn">
                                     <p className="_ct3m">{val.title}</p>
                                     <p className="_ct3x">{val.description}</p>
-                                </div>
-                                <div className="_ma3m3l width-100px _fx5mx">
-                                    <img className="_i3pr5l" alt={val.title} src={val.image} />
                                 </div>
                             </div>
                         )

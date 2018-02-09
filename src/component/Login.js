@@ -44,7 +44,7 @@ class Login extends Component {
                             <div className="_c5m38 _c5x312">
                                 <h2 className="_he">Masuk</h2>
                                 <div className="_ln5w">
-                                    <h2 className="_he">ke gimBot</h2>
+                                    <h2 className="_he">ke Owl Assistant</h2>
                                 </div>
                             </div>
                             <div className="_c5m312 _c5x312">
