@@ -272,8 +272,8 @@ class Home extends Component {
                                     <div className="_w100 _pd _ma" style={{display: this.state.is_show_suggestion?"block":"none"}}>
                                         <div className="_c5m312 _c5x312">
                                             <h2 className="_he3sb">Owl Assistant</h2>
-                                            <div className="_ch3a">
-                                                <p className="_ma">What can i help?</p>
+                                            <div className="_ch3a _pl5l">
+                                                <p className="_ma">Butuh bantuan?</p>
                                             </div>
                                         </div>
                                         <div className="_ch5w _cn">

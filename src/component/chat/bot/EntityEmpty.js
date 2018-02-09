@@ -11,7 +11,7 @@ const EntityEmpty = props => {
         <div className="_w100 _pd _ma">
             <div className="_c5m312 _c5x312">
                 <h2 className="_he3sb">{user_name}</h2>
-                <div className="_ch3a">
+                <div className="_ch3a _pl5l">
                     <p className="_ma">{text}</p>
                 </div>
             </div>

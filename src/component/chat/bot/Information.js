@@ -11,10 +11,10 @@ const Information = props => {
     return (
         <div className="_c5m312 _c5x312 _ma3l3t">
             <h2 className="_he3sb">{user_name}</h2>
-            <div className="_ch3a">
+            <div className="_ch3a _pl5l">
                 <p className="_ma">{text}</p>
             </div>
-            <div className="_ch3d _c5m36">
+            <div className="_ch3d _c5m36" style={{clear:"left"}}>
                 <header>
                     <h4>Informasi</h4>
                 </header>

@@ -12,14 +12,14 @@ const Assignment = props => {
     return (
         <div className="_c5m312 _c5x312 _ma3l3t _ma3m3b">
             <h2 className="_he3sb">{user_name}</h2>
-            <div className="_ch3a">
+            <div className="_ch3a _pl5l">
                 <p className="_ma">{text}</p>
             </div>
             {
                 assignments.map((val, i) => {
                     const dt = new Date(val.due_date * 1000).toDateString()
                     return (
-                        <div key={i} className="_ch3g _c5m33 _c5x312">
+                        <div key={i} className="_ch3g _c5m33 _c5x312" style={{clear:"left"}}>
                             <h4>{val.course_name}</h4>
                             <h6>{dt}</h6>
                             <h5>{val.description}</h5>
