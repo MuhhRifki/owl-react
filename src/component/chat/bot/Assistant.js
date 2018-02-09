@@ -4,7 +4,7 @@ const Assistant = props => {
     const {
         user_name,
         assistants,
-        message,
+        text,
         time
     } = props
 
@@ -13,7 +13,7 @@ const Assistant = props => {
             <div className="_c5m312 _c5x312">
                 <h2 className="_he3sb">{user_name}</h2>
                 <div className="_ch3a">
-                    <p className="_ma">{message}</p>
+                    <p className="_ma">{text}</p>
                 </div>
             </div>
             <div className="_ch5w _cn">

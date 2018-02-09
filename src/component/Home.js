@@ -20,17 +20,17 @@ class Home extends Component {
             user_name: "",
             message_input: "",
             message_histories: [],
-            is_histories_loaded: false
+            is_histories_loaded: false,
+            is_show_suggestion: true,
         }
     }
 
     componentDidMount() {
         if (this.props.is_logged_in) {
             this.loadUser()
-            this.loadHistory()   
+            this.loadHistory()
         }
     }
-
     loadUser = () => {
         const {dispatcherRequest} = this.props
         axios.get(`/api/v1/user/profile`, {
@@ -57,7 +57,10 @@ class Home extends Component {
                 return status === 200
             }
         }).then((res) => {
-            res.data.data.map((val) => this.dispatchMessage(val))
+            res
+                .data
+                .data
+                .map((val) => this.dispatchMessage(val))
             this.setState({is_histories_loaded: true})
             this.scrollBottom()
         }).catch((err) => {
@@ -82,7 +85,31 @@ class Home extends Component {
     handleMessageInput = (e) => {
         this.setState({message_input: e.target.value})
     }
+    handleSubmitSuggestion = (e)=>{
+        let val = e.target.value
+        this.hideSuggestion()
+        let formData = new FormData()
+        formData.append('text', val)
+        this.dispatchMessage({
+            message: {
+                id: 1,
+                text: val
+            },
+            status: STATUS_USER,
+            time: Math.floor(Date.now() / 1000)
+        })
 
+        this.scrollBottom(true)
+
+        axios.post(`/api/v1/bot`, formData, {
+            validateStatus: (status) => {
+                return status === 200
+            }
+        }).then((res) => {
+            this.dispatchMessage(res.data.data)
+            this.scrollBottom(true)
+        }).catch(() => {})
+    }
     handleSubmit = (e) => {
         e.preventDefault()
 
@@ -96,10 +123,8 @@ class Home extends Component {
         if (message_input.length < 1) {
             return
         }
-        
         let formData = new FormData()
         formData.append('text', message_input)
-
         this.dispatchMessage({
             message: {
                 id: 1,
@@ -116,13 +141,16 @@ class Home extends Component {
             validateStatus: (status) => {
                 return status === 200
             }
-        })
-        .then((res)=>{
+        }).then((res) => {
             this.dispatchMessage(res.data.data)
             this.scrollBottom(true)
-        }).catch(()=>{})
+        }).catch(() => {})
     }
-
+    hideSuggestion = ()=>{
+        this.setState({
+            is_show_suggestion: false,
+        })
+    }
     handleSignOut = (e) => {
         e.preventDefault()
 
@@ -133,17 +161,19 @@ class Home extends Component {
             validateStatus: (status) => {
                 return status === 200
             }
-        })
-        .then((res)=>{
+        }).then((res) => {
             dispatcherLoading(100, false)
             dispatcherRequest(false, 0, '')
-        }).catch((err)=>{
+        }).catch((err) => {
             dispatcherLoading(10, true)
             dispatcherRequest(true, 401, 'Kesalahan sambungan')
         })
     }
 
-    scrollBottom = (isSmooth) => {
+    scrollBottom = (isSmooth, delay) => {
+        delay = delay
+            ? delay
+            : 100
         setTimeout(() => {
             const content = document.getElementById('chat_content')
             if (content) {
@@ -156,7 +186,7 @@ class Home extends Component {
                     content.scrollTop = content.scrollHeight
                 }
             }
-        }, 100)
+        }, delay)
     }
 
     render() {
@@ -203,7 +233,11 @@ class Home extends Component {
                     {/* content */}
                     {!this.state.is_histories_loaded
                         ? (
-                            <div className="_cn _f5c" style={{background: 'aliceblue'}}>
+                            <div
+                                className="_cn _f5c"
+                                style={{
+                                background: 'aliceblue'
+                            }}>
                                 <div className="_bl5d _pd3l3a">
                                     <LoadingAnim/>
                                 </div>
@@ -229,24 +263,28 @@ class Home extends Component {
                                                     username={this.state.user_name}
                                                     message={val.message.text}
                                                     time={val.time}/>)
-                                                : (<ChatBot key={i} user_name="Owl Assistant" message={val.message} time={val.time}/>)
+                                                : (<ChatBot
+                                                    key={i}
+                                                    user_name="Owl Assistant"
+                                                    message={val.message}
+                                                    time={val.time}/>)
                                         })}
-                                        <div className="_w100 _pd _ma">
-                                            <div className="_c5m312 _c5x312">
-                                                <h2 className="_he3sb">Owl Assistant</h2>
-                                                <div className="_ch3a">
-                                                    <p className="_ma">What can i help?</p>
-                                                </div>
+                                    <div className="_w100 _pd _ma" style={{display: this.state.is_show_suggestion?"block":"none"}}>
+                                        <div className="_c5m312 _c5x312">
+                                            <h2 className="_he3sb">Owl Assistant</h2>
+                                            <div className="_ch3a">
+                                                <p className="_ma">What can i help?</p>
                                             </div>
-                                            <div className="_ch5w _cn">
-                                                <button className="_ch3a5b">Praktikum hari ini</button>
-                                                <button className="_ch3a5b">Lihat nilai</button>
-                                                <button className="_ch3a5b">Lihat tugas</button>
-                                                <button className="_ch3a5b">Tugas yang belum dikerjakan</button>
-                                                <button className="_ch3a5b">Praktikum besok</button>
-                                            </div>
-                                            <p className="_he3s _c5m312">10:15 AM, Today</p>
                                         </div>
+                                        <div className="_ch5w _cn">
+                                            <input type="button" className="_ch3a5b" onClick={this.handleSubmitSuggestion} value="Praktikum hari ini" />
+                                            <input type="button" className="_ch3a5b" onClick={this.handleSubmitSuggestion} value="Lihat nilai"/>
+                                            <input type="button" className="_ch3a5b" onClick={this.handleSubmitSuggestion} value="Lihat tugas"/>
+                                            <input type="button" className="_ch3a5b" onClick={this.handleSubmitSuggestion} value="Tugas yang belum dikerjakan"/>
+                                            <input type="button" className="_ch3a5b" onClick={this.handleSubmitSuggestion} value="Praktikum besok"/>
+                                        </div>
+                                        <p className="_he3s _c5m312">10:15 AM, Today</p>
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -255,6 +293,9 @@ class Home extends Component {
                     <footer className="_ch3ftr">
                         <div className="_cn flex-end _ch3bd">
                             <ContentEditable
+                                onFocus={() => {
+                                this.scrollBottom(true, 300)
+                            }}
                                 id="message_input"
                                 className="_ch3m"
                                 html={this.state.message_input}

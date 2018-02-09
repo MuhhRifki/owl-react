@@ -3,7 +3,7 @@ import 'core-js/es6/set'
 
 import React, {Component} from 'react'
 import {Redirect} from 'react-router-dom'
-import PropTypes from 'prop-types'
+import propTypes from 'prop-types'
 import {connect} from 'react-redux'
 import axios from 'axios'
 
@@ -133,12 +133,12 @@ class Login extends Component {
     }
 }
 
-Login.PropTypes = {
-    is_logged_in: PropTypes.bool.isRequired,
-    is_login_failed: PropTypes.bool.isRequired,
-    email: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
-    onSubmitAction: PropTypes.func.isRequired
+Login.propTypes = {
+    is_logged_in: propTypes.bool.isRequired,
+    is_login_failed: propTypes.bool.isRequired,
+    email: propTypes.string.isRequired,
+    password: propTypes.string.isRequired,
+    onSubmitAction: propTypes.func.isRequired
 }
 
 const mapStatetoProps = (state) => {

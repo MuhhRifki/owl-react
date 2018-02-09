@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import propTypes from 'prop-types'
 import {connect} from 'react-redux'
 
 import {loadingRequest} from '../../action/action'
@@ -141,13 +141,13 @@ class LoadingBar extends React.Component {
 
 // The Props
 LoadingBar.propTypes = {
-    id: PropTypes.string,
-    className: PropTypes.string,
-    progress: PropTypes.number,
-    direction: PropTypes.string,
-    error: PropTypes.bool,
-    onErrorDone: PropTypes.func,
-    onProgressDone: PropTypes.func
+    id: propTypes.string,
+    className: propTypes.string,
+    progress: propTypes.number,
+    direction: propTypes.string,
+    error: propTypes.bool,
+    onErrorDone: propTypes.func,
+    onProgressDone: propTypes.func
 }
 
 LoadingBar.defaultProps = {

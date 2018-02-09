@@ -4,7 +4,7 @@ const Grade = props => {
     const {
         user_name,
         grades,
-        message,
+        text,
         time
     } = props
 
@@ -12,7 +12,7 @@ const Grade = props => {
         <div className="_c5m312 _c5x312 _ma3l3t">
             <h2 className="_he3sb">{user_name}</h2>
             <div className="_ch3a">
-                <p className="_ma">{message}</p>
+                <p className="_ma">{text}</p>
             </div>
             <table className="_ch3e _ma3m3tb">
                 <tbody>
